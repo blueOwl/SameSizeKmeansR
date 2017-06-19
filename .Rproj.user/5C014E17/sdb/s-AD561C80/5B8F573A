@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# Hello, world!\n#\n# This is an example function named 'hello' \n# which prints 'Hello, world!'.\n#\n# You can learn more about package authoring with RStudio at:\n#\n#   http://r-pkgs.had.co.nz/\n#\n# Some useful keyboard shortcuts for package authoring:\n#\n#   Build and Reload Package:  'Cmd + Shift + B'\n#   Check Package:             'Cmd + Shift + E'\n#   Test Package:              'Cmd + Shift + T'\n\nhello <- function() {\n  print(\"Hello, world!\")\n}\n\n# Creating a README for the project\ndevtools::use_readme_rmd()\n\n# Infrastructure for testing\ndevtools::use_testthat()\n\n# Infrastructure for Code Coverage\ndevtools::use_coverage(type = \"codecov\") # This creates the .travis.yml\ndevtools::use_appveyor()\n\n# A LICENSE file (required by CRAN)\n# The line \"license: MIT + file\" in the DESCRIPTION file\ndevtools::use_mit_license(copyright_holder = \"George G. Vega Yon\")\ndevtools::use_news_md()\n",
+    "created" : 1497903285524.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3478220179",
+    "id" : "5B8F573A",
+    "lastKnownWriteTime" : 1497903279,
+    "last_content_update" : 1497903308376,
+    "path" : "~/projects/SameSizeKmeans/R/hello.R",
+    "project_path" : "R/hello.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\noutput:\n  md_document:\n    variant: markdown_github\n---\n\n<!-- README.md is generated from README.Rmd. Please edit that file -->\n\n```{r, echo = FALSE}\nknitr::opts_chunk$set(\n  collapse = TRUE,\n  comment = \"#>\",\n  fig.path = \"README-\"\n)\n```\n\n# SameSizeKmeans\n\nThe goal of SameSizeKmeans is to ...\n\n## Example\n\nThis is a basic example which shows you how to solve a common problem:\n\n```{r example}\n## basic example code\n```\n",
+    "created" : 1497903332177.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2128329313",
+    "id" : "590084C4",
+    "lastKnownWriteTime" : 1497903332,
+    "last_content_update" : 1497903332,
+    "path" : "~/projects/SameSizeKmeans/README.Rmd",
+    "project_path" : "README.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
