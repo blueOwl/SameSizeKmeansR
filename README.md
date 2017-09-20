@@ -8,7 +8,7 @@ The goal of SameSizeKmeans is to ...
 SameSizeKmeans(x, 3) #x is a matrix or a data.frame, cluster on rows
 ```
 
-##installation
+## Installation
 
 ```
 library(devtools)

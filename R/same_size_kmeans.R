@@ -38,7 +38,8 @@ cal_means <- function(x, clusters){
 }
 
 dist_s <-function(x, y) {
-  sqrt(sum((x - y) ^ 2))
+  #sqrt(sum((x - y) ^ 2))
+  1 - (x %*% y / sqrt(x%*%x * y%*%y))
 }
 dist_f  <- function (x, centers) {
   apply(centers, 1,function(i) {dist_s(x, i)}) 
