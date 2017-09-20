@@ -144,7 +144,7 @@ SameSizeKmeans <- function(x, k, max_iter = 100) {
     }
     iter = iter + 1
     cat(paste("number of transfers in iter", iter, active, "\n"))
-    cat(paste(clusters))
+    #cat(paste(clusters))
   }
   
   cat(paste("K-means clustering converged in", iter, "iters", "\n"))
