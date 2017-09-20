@@ -11,9 +11,9 @@
 #' 
 #' @return the output is a 0-1 vector, each 1 indicate a center 
 
-kmeanspp <-function (x, k) {
-  data_num = nrow(x)
-  centers = sample(1:data_num,1)
+KmeansppInital <-function (x, k) {
+  data.num = nrow(x)
+  centers = sample(1:data.num,1)
   while (length(centers) < k) {
     dist = apply(x, 1, function(i) {
       #distance to the nearest center
@@ -23,12 +23,12 @@ kmeanspp <-function (x, k) {
     })
     #cat(dist/sum(dist))
     #cat("\n")
-    centers = c(centers, sample(1:data_num, 1, prob = dist/sum(dist)))
+    centers = c(centers, sample(1:data.num, 1, prob = dist/sum(dist)))
   }
   sort(centers)
 }
 
-cal_means <- function(x, clusters){
+CalMeans <- function(x, clusters){
   clsts = unique(clusters)
   res = matrix(0, length(clsts),2)
   for(i in clsts){
@@ -37,56 +37,57 @@ cal_means <- function(x, clusters){
   res
 }
 
-dist_s <-function(x, y) {
+GetSingleDist <-function(x, y) {
   #sqrt(sum((x - y) ^ 2))
   1 - (x %*% y / sqrt(x%*%x * y%*%y))
 }
-dist_f  <- function (x, centers) {
-  apply(centers, 1,function(i) {dist_s(x, i)}) 
+
+GetMultiDist  <- function (x, centers) {
+  apply(centers, 1,function(i) {GetSingleDist(x, i)}) 
 }
 
-inital_assign <- function(x, centers_idx, cluster_size) {
-  clst_num = length(centers_idx)
-  clst_lst = rep(1, clst_num)
-  data_num = nrow(x)
-  clst_asg = rep(0, data_num)
+InitalAssign <- function(x, centers.idx, cluster.size) {
+  clst.num = length(centers.idx)
+  clst.lst = rep(1, clst.num)
+  data.num = nrow(x)
+  clst.asg = rep(0, data.num)
   
-  for (i in 1:clst_num){
-    clst_asg[centers_idx[i]] = i
+  for (i in 1:clst.num){
+    clst.asg[centers.idx[i]] = i
   }
   
-  centers = x[centers_idx,]
+  centers = x[centers.idx,]
   
-  max_size = ceiling(data_num / clst_num)
+  max.size = ceiling(data.num / clst.num)
   
-  dist_mat = t(apply(x, 1, dist_f, centers = centers))
-  for (idx in 1:data_num) {
-    if (idx %in% centers_idx) {
+  dist.mat = t(apply(x, 1, GetMultiDist, centers = centers))
+  for (idx in 1:data.num) {
+    if (idx %in% centers.idx) {
       next
     }
-    ord_lst = order(dist_mat[idx,])
-    for (ord in 1:clst_num){
-      clst_idx = ord_lst[ord]
-      if (clst_lst[clst_idx] < max_size) {
-        clst_asg[idx] = clst_idx
-        clst_lst[clst_idx] = clst_lst[clst_idx] + 1
+    ord.lst = order(dist.mat[idx,])
+    for (ord in 1:clst.num){
+      clst.idx = ord.lst[ord]
+      if (clst.lst[clst.idx] < max.size) {
+        clst.asg[idx] = clst.idx
+        clst.lst[clst.idx] = clst.lst[clst.idx] + 1
         break
       }
     }
   }
-  clst_asg
+  clst.asg
 }
 
 
-get_prio_lst <- function(x, clusters, means){
+GetPrioLst <- function(x, clusters, means){
   ids = 1:nrow(x)
   cur = clusters
-  dist = t(apply(x, 1, dist_f, centers = means))
-  cur_dist = sapply(ids, function(i){ dist[i,clusters[i]]})
+  dist = t(apply(x, 1, GetMultiDist, centers = means))
+  cur.dist = sapply(ids, function(i){ dist[i,clusters[i]]})
   delta = sapply(ids, function(i){ dist[i,clusters[i]] - min(dist[i,])})
   #delta current assign distance minus best alternative, which is improvement
   alt = sapply(ids, function(i){ which.min(dist[i,])})
-  res = data.frame(ids, cur, delta, alt, cur_dist)
+  res = data.frame(ids, cur, delta, alt, cur.dist)
   res[order(res$delta, decreasing = TRUE),]
 }
 #' get K clusters with same size kmeans algorithm
@@ -95,48 +96,52 @@ get_prio_lst <- function(x, clusters, means){
 #' @param k total number of clusters
 #' 
 #' @return the output is a vector, each element indicate a row's cluster number 
-SameSizeKmeans <- function(x, k, max_iter = 100) {
-  data_num = nrow(x)
-  cluster_size = ceiling(data_num / k)
-  centers_idx = kmeanspp(x, k)
-  clusters = inital_assign(x, centers_idx, k)
-  size_lst = sapply(1:k, function (i) {length(clusters[clusters == i])})
+SameSizeKmeans <- function(x, k, max.iter = 100) {
+  data.num = nrow(x)
+  cluster.size = ceiling(data.num / k)
+  centers.idx = KmeansppInital(x, k)
+  clusters = InitalAssign(x, centers.idx, k)
+  size.lst = sapply(1:k, function (i) {length(clusters[clusters == i])})
   
   iter = 0
-  while (iter < max_iter) {
+  while (iter < max.iter) {
     active = 0
     tranlst = rep(-1, k)
-    means = cal_means(x, clusters)
-    prio_lst = get_prio_lst(x, clusters, means)
-    for (pid in 1:nrow(prio_lst)) {
+    means = CalMeans(x, clusters)
+    prio.lst = GetPrioLst(x, clusters, means)
+    for (pid in 1:nrow(prio.lst)) {
       transferred = FALSE
-      if (prio_lst[pid,]$delta <= 0) {next}
-      for (other_clst in 1:k){
-        if(other_clst == prio_lst[pid,]$cur) {next}
-        gain = prio_lst[pid,]$cur_dist - dist_s(x[prio_lst[pid,]$ids,], means[other_clst,])
-        if(size_lst[other_clst] < cluster_size & gain > 0){
-          clusters[prio_lst[pid,]$ids] = other_clst
-          size_lst[other_clst] = size_lst[other_clst] + 1
+      if (prio.lst[pid,]$delta <= 0) {
+	      next
+      }
+      for (other.clst in 1:k){
+        if(other.clst == prio.lst[pid,]$cur) {
+		next
+	}
+        gain = prio.lst[pid,]$cur.dist - GetSingleDist(x[prio.lst[pid,]$ids,], means[other.clst,])
+        if(size.lst[other.clst] < cluster.size & gain > 0){
+          clusters[prio.lst[pid,]$ids] = other.clst
+          size.lst[other.clst] = size.lst[other.clst] + 1
           active = active + 1
           transferred = TRUE
           break
         }
-        if(tranlst[other_clst] != -1){#target cluster has point  waiting for transfer
-          trans_id = tranlst[other_clst]
-          tgain = dist_s(x[trans_id,], means[other_clst,]) - dist_s(x[trans_id, ], means[prio_lst[pid,]$cur,])
+        if(tranlst[other.clst] != -1){#target cluster has point  waiting for transfer
+          trans.id = tranlst[other.clst]
+          tgain = GetSingleDist(x[trans.id,], means[other.clst,]) - GetSingleDist(x[trans.id, ], means[prio.lst[pid,]$cur,])
           if(tgain + gain > 0){
             #exchange two point
             active = active + 2
             transferred = TRUE
-            clusters[prio_lst[pid,]$ids] = other_clst
-            clusters[trans_id] = prio_lst[pid,]$cur
-            tranlst[other_clst] = -1
+            clusters[prio.lst[pid,]$ids] = other.clst
+            clusters[trans.id] = prio.lst[pid,]$cur
+            tranlst[other.clst] = -1
             break
           }
         }
       }
       if (transferred == FALSE) {
-        tranlst[prio_lst[pid,]$cur] = prio_lst[pid,]$ids
+        tranlst[prio.lst[pid,]$cur] = prio.lst[pid,]$ids
         }
     }
     if(active == 0){
