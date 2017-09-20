@@ -1,18 +1,4 @@
----
-output:
-  md_document:
-    variant: markdown_github
----
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
 
 # SameSizeKmeans
 
@@ -20,8 +6,10 @@ The goal of SameSizeKmeans is to ...
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+SameSizeKmeans(x, 3) #x is a matrix or a data.frame, cluster on rows
 
-```{r example}
-## basic example code
-```
+##installation
+
+library(devtools)
+devtools::install_github("blueOwl/SameSizeKmeansR")
+library(SameSizeKemansR)

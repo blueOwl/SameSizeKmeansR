@@ -1,13 +1,12 @@
-Package: SameSizeKmeans
+Package: SameSizeKmeansR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Cluster Vectors with Same-Size-Kmeans Algorithm
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Zhu Liu
+Maintainer: Zhu Liu<me@blueowl.cn>
+Description: That input data as a matrix or data.frame, cluster rows with Same-Size-Kmeans algorithm
+    Two distance measure types are avaible, euclidean distance and cosine distance
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat,
-    covr
+Suggests: 
