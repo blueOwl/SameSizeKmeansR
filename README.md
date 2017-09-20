@@ -13,5 +13,5 @@ SameSizeKmeans(x, 3) #x is a matrix or a data.frame, cluster on rows
 ```
 library(devtools)
 devtools::install_github("blueOwl/SameSizeKmeansR")
-library(SameSizeKemansR)
+library(SameSizeKmeansR)
 ```
