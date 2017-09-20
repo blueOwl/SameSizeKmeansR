@@ -18,11 +18,12 @@ KmeansppInital <-function (x, k) {
     dist = apply(x, 1, function(i) {
       #distance to the nearest center
       min(sapply(centers, function(cid) {
-       sum((i - x[cid,]) ^ 2) 
+       GetSingleDist(i, x[cid,]) ^ 2
       }))
     })
     #cat(dist/sum(dist))
     #cat("\n")
+    if (sum(dist) == 0){dist = rep(1, data.num)}
     centers = c(centers, sample(1:data.num, 1, prob = dist/sum(dist)))
   }
   sort(centers)
@@ -30,7 +31,7 @@ KmeansppInital <-function (x, k) {
 
 CalMeans <- function(x, clusters){
   clsts = unique(clusters)
-  res = matrix(0, length(clsts),2)
+  res = matrix(0, length(clsts),ncol(x))
   for(i in clsts){
     res[i,] = colMeans(x[clusters == i,])
   }
